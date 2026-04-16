@@ -20,10 +20,6 @@ export class PageMonitorStack extends cdk.Stack {
     });
 
     // パラメータ
-    const monitorUrl = new cdk.CfnParameter(this, "MonitorUrl", {
-      type: "String",
-      description: "監視対象の URL",
-    });
     const runtimeArn = new cdk.CfnParameter(this, "AgentCoreRuntimeArn", {
       type: "String",
       description: "AgentCore Runtime ARN（agentcore status で確認）",
@@ -38,7 +34,6 @@ export class PageMonitorStack extends cdk.Stack {
       timeout: cdk.Duration.minutes(10),
       memorySize: 256,
       environment: {
-        MONITOR_URL: monitorUrl.valueAsString,
         AGENTCORE_RUNTIME_ARN: runtimeArn.valueAsString,
       },
     });
