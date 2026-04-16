@@ -1,0 +1,23 @@
+.claude
+
+# agentcore create で生成されるファイル
+pagemonitor/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node.js
+node_modules/
+dist/
+*.js
+*.d.ts
+!cdk/cdk.json
+
+# CDK
+cdk.out/
+
+# 環境変数
+.env
+.env.local
