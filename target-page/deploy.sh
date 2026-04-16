@@ -19,4 +19,4 @@ aws s3api put-bucket-policy --bucket "$BUCKET" --policy \
 
 aws s3 sync "$DIR/" "s3://$BUCKET/" --exclude "deploy.sh" --content-type "text/html; charset=utf-8"
 
-echo "URL: http://$BUCKET.s3-website-ap-northeast-1.amazonaws.com"
+echo "URL: https://$BUCKET.s3.ap-northeast-1.amazonaws.com/index.html"
