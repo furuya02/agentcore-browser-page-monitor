@@ -1,7 +1,12 @@
 .claude
 
-# agentcore create で生成されるファイル
-pagemonitor/
+# agentcore create で生成されるファイル（キャッシュ・ビルド成果物）
+pagemonitor/agentcore/.cache/
+pagemonitor/agentcore/.cli/
+pagemonitor/agentcore/.llm-context/
+pagemonitor/agentcore/cdk/node_modules/
+pagemonitor/agentcore/cdk/dist/
+pagemonitor/app/pagemonitor/.venv/
 
 # Python
 __pycache__/
