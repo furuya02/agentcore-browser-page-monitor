@@ -9,7 +9,7 @@
   },
   "runtimes": [
     {
-      "name": "pagemonitor",
+      "name": "agent",
       "build": "CodeZip",
       "entrypoint": "main.py",
       "codeLocation": "app/pagemonitor/",
@@ -20,7 +20,8 @@
         {"name": "DYNAMODB_TABLE", "value": "PageMonitorState"},
         {"name": "AWS_REGION", "value": "ap-northeast-1"},
         {"name": "LLM_MODEL_ID", "value": "apac.anthropic.claude-sonnet-4-20250514-v1:0"},
-        {"name": "SLACK_WEBHOOK_URL", "value": "<YOUR_SLACK_WEBHOOK_URL>"}
+        {"name": "SLACK_WEBHOOK_URL", "value": "<YOUR_SLACK_WEBHOOK_URL>"},
+        {"name": "MONITOR_URL", "value": "<YOUR_MONITOR_URL>"}
       ]
     }
   ],

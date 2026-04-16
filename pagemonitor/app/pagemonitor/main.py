@@ -15,6 +15,7 @@ from model.load import load_model
 
 DYNAMODB_TABLE = os.environ.get("DYNAMODB_TABLE", "PageMonitorState")
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
+MONITOR_URL = os.environ.get("MONITOR_URL", "")
 AWS_REGION = os.environ.get("AWS_REGION", "ap-northeast-1")
 LLM_MODEL_ID = os.environ.get("LLM_MODEL_ID", "apac.anthropic.claude-sonnet-4-20250514-v1:0")
 
@@ -93,8 +94,8 @@ app = BedrockAgentCoreApp()
 
 @app.entrypoint
 async def invoke(payload, context):
-    url = payload.get("url", "")
-    prompt = payload.get("prompt", f"以下の URL のページを確認してください: {url}")
+    url = payload.get("url", MONITOR_URL)
+    prompt = f"以下の URL のページを確認してください: {url}"
     agent = Agent(system_prompt=SYSTEM_PROMPT, model=load_model(), tools=[browse_page, get_previous_content, save_content, notify_slack])
     async for event in agent.stream_async(prompt):
         if "data" in event and isinstance(event["data"], str):
