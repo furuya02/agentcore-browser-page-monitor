@@ -32,7 +32,19 @@ EventBridge (daily) --> Lambda (trigger) --> AgentCore Runtime (agent)
 
 ## Setup
 
-### 1. Deploy the target page to S3
+### 1. Set up Slack Webhook
+
+1. Go to [Slack API](https://api.slack.com/apps) and create a new App
+2. Enable Incoming Webhooks
+3. Select a notification channel (e.g., `#page-monitor`) and get the Webhook URL
+4. Test:
+   ```bash
+   curl -X POST -H 'Content-type: application/json' \
+     --data '{"text":"Test notification"}' \
+     https://hooks.slack.com/services/TXXXXX/BXXXXX/XXXXXXXX
+   ```
+
+### 2. Deploy the target page to S3
 
 ```bash
 cd target-page
@@ -44,7 +56,7 @@ Note the HTTPS URL (HTTP URLs are blocked by AgentCore Browser):
 https://<bucket-name>.s3.ap-northeast-1.amazonaws.com/index.html
 ```
 
-### 2. Create AgentCore project and apply agent code
+### 3. Create AgentCore project and apply agent code
 
 ```bash
 cd pagemonitor
@@ -63,7 +75,7 @@ cp -f ../app/pagemonitor/pyproject.toml app/pagemonitor/pyproject.toml
 rm -rf app/pagemonitor/mcp_client
 ```
 
-### 3. Configure environment variables
+### 4. Configure environment variables
 
 Edit `agentcore/agentcore.json` and add `envVars` to the runtime definition. Also change `"name"` from `"pagemonitor"` to `"agent"`:
 
@@ -85,14 +97,14 @@ Edit `agentcore/agentcore.json` and add `envVars` to the runtime definition. Als
 }
 ```
 
-### 4. Deploy AgentCore agent
+### 5. Deploy AgentCore agent
 
 ```bash
 agentcore deploy
 agentcore status  # Note the Runtime ARN
 ```
 
-### 5. Add IAM permissions
+### 6. Add IAM permissions
 
 ```bash
 # Get the role name
@@ -117,7 +129,7 @@ aws iam put-role-policy \
   }'
 ```
 
-### 6. Deploy supporting infrastructure (CDK)
+### 7. Deploy supporting infrastructure (CDK)
 
 ```bash
 cd ../../cdk
