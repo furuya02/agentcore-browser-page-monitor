@@ -6,15 +6,7 @@ A web page change detection system using Amazon Bedrock AgentCore Browser. Autom
 
 ## Architecture
 
-```
-EventBridge (daily) --> Lambda (trigger) --> AgentCore Runtime (agent)
-                                                |
-                                                +-- AgentCore Browser (page extraction)
-                                                +-- Bedrock Claude (LLM)
-                                                +-- DynamoDB (content storage)
-                                                +-- Slack (notification)
-```
-
+![](docs/003.png)
 ## Components
 
 | Component | Description |

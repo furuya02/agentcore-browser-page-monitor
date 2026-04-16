@@ -6,14 +6,8 @@ Amazon Bedrock AgentCore Browser を使った Web ページ変更検知システ
 
 ## アーキテクチャ
 
-```
-EventBridge (1日1回) --> Lambda (トリガー) --> AgentCore Runtime (エージェント)
-                                                   |
-                                                   +-- AgentCore Browser (ページ取得)
-                                                   +-- Bedrock Claude (LLM)
-                                                   +-- DynamoDB (内容保存)
-                                                   +-- Slack (通知)
-```
+![](docs/003.png)
+
 
 ## 構成
 
