@@ -139,8 +139,13 @@ agentcore invoke '{}'
 ## クリーンアップ
 
 ```bash
+# 周辺リソースの削除（Lambda, EventBridge, DynamoDB）
 cd cdk && pnpm cdk destroy
-cd pagemonitor && agentcore destroy
+
+# AgentCore Runtime の削除
+cd pagemonitor/agentcore/cdk && npm install && npx cdk destroy
+
+# S3 バケットの削除
 aws s3 rb s3://<バケット名> --force
 ```
 
