@@ -138,8 +138,13 @@ agentcore invoke '{}'
 ## Cleanup
 
 ```bash
+# Remove supporting infrastructure (Lambda, EventBridge, DynamoDB)
 cd cdk && pnpm cdk destroy
-cd pagemonitor && agentcore destroy
+
+# Remove AgentCore Runtime
+cd pagemonitor/agentcore/cdk && npm install && npx cdk destroy
+
+# Remove S3 bucket
 aws s3 rb s3://<bucket-name> --force
 ```
 
