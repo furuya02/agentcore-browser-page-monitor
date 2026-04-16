@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample SaaS - 料金プラン</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f5f7fa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 2rem; text-align: center; }
+    header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    header p { font-size: 1.1rem; opacity: 0.8; }
+    .plans { display: flex; justify-content: center; gap: 2rem; padding: 3rem 2rem; flex-wrap: wrap; }
+    .plan { background: white; border-radius: 12px; padding: 2rem; width: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .plan h2 { font-size: 1.5rem; margin-bottom: 1rem; color: #2c3e50; }
+    .plan .price { font-size: 2.5rem; font-weight: bold; color: #e74c3c; margin-bottom: 1rem; }
+    .plan .price span { font-size: 1rem; font-weight: normal; color: #666; }
+    .plan ul { list-style: none; margin-bottom: 1.5rem; }
+    .plan ul li { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    .plan ul li::before { content: "✓ "; color: #27ae60; font-weight: bold; }
+    .plan.recommended { border: 3px solid #3498db; }
+    .plan.recommended h2::after { content: " おすすめ"; font-size: 0.8rem; color: #3498db; }
+    .notes { max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; }
+    .notes h3 { margin-bottom: 1rem; color: #2c3e50; }
+    .notes ul { margin-left: 1.5rem; }
+    .notes ul li { margin-bottom: 0.5rem; }
+    footer { background: #2c3e50; color: white; text-align: center; padding: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sample SaaS</h1>
+    <p>チームのコラボレーションを加速するプラットフォーム</p>
+  </header>
+
+  <section class="plans">
+    <div class="plan">
+      <h2>Basic</h2>
+      <div class="price">¥980<span>/月</span></div>
+      <ul>
+        <li>ユーザー数: 5名まで</li>
+        <li>ストレージ: 10GB</li>
+        <li>メールサポート</li>
+        <li>基本レポート</li>
+      </ul>
+    </div>
+
+    <div class="plan recommended">
+      <h2>Professional</h2>
+      <div class="price">¥2,980<span>/月</span></div>
+      <ul>
+        <li>ユーザー数: 20名まで</li>
+        <li>ストレージ: 100GB</li>
+        <li>チャットサポート</li>
+        <li>詳細レポート</li>
+        <li>API アクセス</li>
+        <li>SSO 対応</li>
+      </ul>
+    </div>
+
+    <div class="plan">
+      <h2>Enterprise</h2>
+      <div class="price">¥9,800<span>/月</span></div>
+      <ul>
+        <li>ユーザー数: 無制限</li>
+        <li>ストレージ: 1TB</li>
+        <li>24時間電話サポート</li>
+        <li>カスタムレポート</li>
+        <li>API アクセス</li>
+        <li>SSO 対応</li>
+        <li>専任担当者</li>
+        <li>SLA 99.9%</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h3>ご利用にあたっての注意事項</h3>
+    <ul>
+      <li>料金は全て税抜き表示です</li>
+      <li>年間契約の場合、20% 割引が適用されます</li>
+      <li>無料トライアル期間は 14 日間です</li>
+      <li>プランのアップグレードはいつでも可能です</li>
+      <li>ダウングレードは翌月から適用されます</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Sample SaaS Inc. All rights reserved.</p>
+  </footer>
+</body>
+</html>
