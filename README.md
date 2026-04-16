@@ -19,7 +19,7 @@ EventBridge (daily) --> Lambda (trigger) --> AgentCore Runtime (agent)
 
 | Component | Description |
 |-----------|-------------|
-| `pagemonitor/app/pagemonitor/main.py` | Agent with 4 tools: browse_page, get_previous_content, save_content, notify_slack |
+| `src/main.py` | Agent with 4 tools: browse_page, get_previous_content, save_content, notify_slack |
 | `cdk/` | Supporting infrastructure (Lambda, EventBridge, DynamoDB) |
 | `target-page/` | Sample pricing page for monitoring (S3 static hosting) |
 
@@ -59,17 +59,15 @@ https://<bucket-name>.s3.ap-northeast-1.amazonaws.com/index.html
 ### 3. Create AgentCore project and apply agent code
 
 ```bash
-cd pagemonitor
-
-# Create project (generates agentcore/ directory)
+# Create project (generates pagemonitor/ directory)
 agentcore create --name pagemonitor --defaults --build CodeZip --output-dir .
 cd pagemonitor
 
 # Replace generated code with pre-configured agent
-cp -f ../app/pagemonitor/main.py app/pagemonitor/main.py
-cp -f ../app/pagemonitor/model/load.py app/pagemonitor/model/load.py
-cp -f ../app/pagemonitor/model/__init__.py app/pagemonitor/model/__init__.py
-cp -f ../app/pagemonitor/pyproject.toml app/pagemonitor/pyproject.toml
+cp -f ../src/main.py app/pagemonitor/main.py
+cp -f ../src/model/load.py app/pagemonitor/model/load.py
+cp -f ../src/model/__init__.py app/pagemonitor/model/__init__.py
+cp -f ../src/pyproject.toml app/pagemonitor/pyproject.toml
 
 # Remove unnecessary generated files
 rm -rf app/pagemonitor/mcp_client
@@ -132,7 +130,7 @@ aws iam put-role-policy \
 ### 7. Deploy supporting infrastructure (CDK)
 
 ```bash
-cd ../../cdk
+cd ../cdk
 pnpm install
 pnpm cdk bootstrap  # first time only
 pnpm cdk deploy --parameters AgentCoreRuntimeArn=<runtime-arn>
@@ -171,7 +169,7 @@ agentcore invoke '{}'
 cd cdk && pnpm cdk destroy
 
 # Remove AgentCore Runtime
-cd pagemonitor/pagemonitor/agentcore/cdk && npm install && npx cdk destroy
+cd pagemonitor/agentcore/cdk && npm install && npx cdk destroy
 
 # Remove S3 bucket
 aws s3 rb s3://<bucket-name> --force

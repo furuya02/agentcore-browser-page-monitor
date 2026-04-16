@@ -1,7 +1,7 @@
 .claude
 
 # agentcore create で生成されるファイル
-pagemonitor/agentcore/
+pagemonitor/
 
 # Python
 __pycache__/
