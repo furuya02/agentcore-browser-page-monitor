@@ -31,7 +31,7 @@ async def browse_page(url: str) -> str:
         client.start()
         ws_url, headers = client.generate_ws_headers()
 
-        profile = BU_BrowserProfile(headers=headers, timeout=180000)
+        profile = BU_BrowserProfile(headers=headers, timeout=180000, enable_default_extensions=False)
         bu_session = BU_BrowserSession(cdp_url=ws_url, browser_profile=profile)
         await bu_session.start()
 
