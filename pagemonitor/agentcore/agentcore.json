@@ -15,7 +15,13 @@
       "codeLocation": "app/pagemonitor/",
       "runtimeVersion": "PYTHON_3_13",
       "networkMode": "PUBLIC",
-      "protocol": "HTTP"
+      "protocol": "HTTP",
+      "envVars": [
+        {"name": "DYNAMODB_TABLE", "value": "PageMonitorState"},
+        {"name": "AWS_REGION", "value": "ap-northeast-1"},
+        {"name": "LLM_MODEL_ID", "value": "apac.anthropic.claude-sonnet-4-20250514-v1:0"},
+        {"name": "SLACK_WEBHOOK_URL", "value": "<YOUR_SLACK_WEBHOOK_URL>"}
+      ]
     }
   ],
   "memories": [],
