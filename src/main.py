@@ -26,29 +26,72 @@ JST = timezone(timedelta(hours=9))
 @tool
 async def browse_page(url: str) -> str:
     """AgentCore Browser で Web ページの情報を抽出する"""
+    # ① AgentCore Browser のクライアント（bedrock_agentcore SDK）
+    #    AWS 側のマネージド Chromium を借りるためのハンドル。ローカルにブラウザは不要。
     client = BrowserClient(region=AWS_REGION)
     bu_session = None
     try:
+        # ② マネージド Chromium を起動
+        #    AWS 側でブラウザインスタンスが立ち上がり、CDP (Chrome DevTools Protocol)
+        #    の WebSocket エンドポイントが利用可能になる。
         client.start()
+
+        # ③ CDP 接続用の WebSocket URL と SigV4 署名付き認証ヘッダーを取得
+        #    ws_url  : CDP の WebSocket エンドポイント（wss://...）
+        #    headers : WebSocket 接続時に付与する SigV4 署名付きヘッダー
         ws_url, headers = client.generate_ws_headers()
 
+        # ④ browser-use 用のブラウザ設定（BrowserProfile）
+        #    headers                       : CDP 接続時の SigV4 認証に使用
+        #    timeout=180000                : CDP 操作のタイムアウト（ミリ秒）
+        #    enable_default_extensions=False:
+        #        browser-use はデフォルトで uBlock Origin 等の拡張を有効化するが、
+        #        AgentCore Browser のサンドボックスでは動作しないため無効化。
         profile = BU_BrowserProfile(headers=headers, timeout=180000, enable_default_extensions=False)
+
+        # ⑤ browser-use の BrowserSession で CDP 接続を確立
+        #    cdp_url にマネージド Chromium の WebSocket URL を渡すことで、
+        #    ローカル Chromium ではなく AgentCore Browser に繋がる。
         bu_session = BU_BrowserSession(cdp_url=ws_url, browser_profile=profile)
         await bu_session.start()
 
+        # ⑥ ブラウザ操作用の LLM クライアント（browser-use 公式の Bedrock 統合）
+        #    ※ langchain_aws.ChatBedrockConverse は browser-use 非対応
+        #       （pydantic の extra='forbid' / output_format kwargs 非対応のため）
+        #    ChatAWSBedrock は @dataclass 実装で output_format に対応しており、
+        #    browser-use が要求する AgentOutput の構造化出力を返せる。
+        #    session に boto3.Session を渡すことで、AgentCore Runtime の
+        #    IAM ロール認証をそのまま使用する。
         bedrock_chat = ChatAWSBedrock(
             model=LLM_MODEL_ID,
             aws_region=AWS_REGION,
             session=boto3.Session(region_name=AWS_REGION),
         )
+
+        # ⑦ browser-use の Agent を組み立てる
+        #    task           : 自然言語のタスク指示（CSS セレクタ不要）
+        #    llm            : 上で作成した ChatAWSBedrock
+        #    browser_session: CDP 接続済みの BrowserSession
         browser_agent = BrowserUseAgent(
             task=f"以下のURLを開き、ページの全テキスト情報を構造化して抽出してください。\nURL: {url}",
             llm=bedrock_chat,
             browser_session=bu_session,
         )
+
+        # ⑧ 自律実行ループを開始
+        #    Agent は内部で以下の 5 ステップを done になるまで繰り返す:
+        #      1. Context Preparation : DOM / screenshot / available actions を収集
+        #      2. LLM Output          : 次のアクションを AgentOutput として構造化出力
+        #      3. Action Execution    : Tools が CDP 経由でアクションを実行
+        #      4. Post-Processing     : 失敗・完了・ダウンロードを検知
+        #      5. Finalization        : AgentHistoryList に履歴を保存
+        #    戻り値は AgentHistoryList。str() で全履歴を文字列化して返す。
         result = await browser_agent.run()
         return str(result)
     finally:
+        # ⑨ リソースのクリーンアップ
+        #    BrowserSession を先に閉じ、その後で AgentCore Browser を停止する。
+        #    client.stop() を忘れるとマネージド Chromium が残り続けるため必須。
         if bu_session:
             with contextlib.suppress(Exception):
                 await bu_session.close()
